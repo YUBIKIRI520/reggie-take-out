@@ -1,6 +1,7 @@
 package com.yubikiri.reggie.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.yubikiri.reggie.common.BaseContext;
 import com.yubikiri.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -46,6 +47,10 @@ public class LoginCheckFilter implements Filter {
 
         // 4. 判断登陆状态，如果已经登陆，则放行
         if (request.getSession().getAttribute("employee") != null) {
+
+            Long empId = (Long) request.getSession().getAttribute("employee");
+            BaseContext.setCurrentId(empId);
+
             filterChain.doFilter(request, response);
             return;
         }
