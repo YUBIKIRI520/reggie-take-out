@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yubikiri.reggie.common.CustomException;
 import com.yubikiri.reggie.dto.SetmealDto;
+import com.yubikiri.reggie.entity.DishFlavor;
 import com.yubikiri.reggie.entity.Setmeal;
 import com.yubikiri.reggie.entity.SetmealDish;
 import com.yubikiri.reggie.mapper.SetmealMapper;
@@ -65,5 +66,29 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         lambdaQueryWrapper.in(SetmealDish::getSetmealId, ids);
 
         setmealDishService.remove(lambdaQueryWrapper);
+    }
+
+    @Override
+    @Transactional
+    public void updateWithDish(SetmealDto setmealDto) {
+
+        // 更新Setmeal表信息
+        this.updateById(setmealDto);
+
+        // 更新Setmeal_Dish表信息
+        // 先清理当前的dish数据
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId, setmealDto.getId());
+
+        setmealDishService.remove(queryWrapper);
+
+        // 添加当前提交过来的的Dish数据
+        List<SetmealDish> setmealDishList = setmealDto.getSetmealDishes();
+        List<SetmealDish> dishes = setmealDishList.stream().map((item) -> {
+            item.setSetmealId(setmealDto.getId());
+            return item;
+        }).collect(Collectors.toList());
+
+        setmealDishService.saveBatch(dishes);
     }
 }
