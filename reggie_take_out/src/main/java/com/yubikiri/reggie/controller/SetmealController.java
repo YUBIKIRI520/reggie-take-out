@@ -70,4 +70,26 @@ public class SetmealController {
 
         return R.success(dtoPage);
     }
+
+    @DeleteMapping
+    public R<String> delete(@RequestParam List<Long> ids) {
+
+        setmealService.removeWithDish(ids);
+        return R.success("套餐数据删除成功");
+    }
+
+    @PostMapping("/status/{status}")
+    public R<String> changeStatus(@PathVariable int status, String ids) {
+
+        String[] idList = ids.split(",");
+        for (String id : idList) {
+            Setmeal setmeal = new Setmeal();
+            setmeal.setId(Long.parseLong((id)));
+            setmeal.setStatus(status);
+
+            setmealService.updateById(setmeal);
+        }
+
+        return R.success("更新状态成功");
+    }
 }
