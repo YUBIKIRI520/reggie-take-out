@@ -1,4 +1,4 @@
-package com.yubikiri.reggie.mapper;
+package com.yubikiri.reggie.service.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yubikiri.reggie.entity.DishFlavor;

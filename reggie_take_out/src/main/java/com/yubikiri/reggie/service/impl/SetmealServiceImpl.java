@@ -4,13 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yubikiri.reggie.common.CustomException;
 import com.yubikiri.reggie.dto.SetmealDto;
-import com.yubikiri.reggie.entity.DishFlavor;
 import com.yubikiri.reggie.entity.Setmeal;
 import com.yubikiri.reggie.entity.SetmealDish;
-import com.yubikiri.reggie.mapper.SetmealMapper;
+import com.yubikiri.reggie.service.mapper.SetmealMapper;
 import com.yubikiri.reggie.service.SetmealDishService;
 import com.yubikiri.reggie.service.SetmealService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

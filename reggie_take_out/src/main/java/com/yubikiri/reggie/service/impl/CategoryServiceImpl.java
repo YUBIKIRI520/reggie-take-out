@@ -6,11 +6,10 @@ import com.yubikiri.reggie.common.CustomException;
 import com.yubikiri.reggie.entity.Category;
 import com.yubikiri.reggie.entity.Dish;
 import com.yubikiri.reggie.entity.Setmeal;
-import com.yubikiri.reggie.mapper.CategoryMapper;
+import com.yubikiri.reggie.service.mapper.CategoryMapper;
 import com.yubikiri.reggie.service.CategoryService;
 import com.yubikiri.reggie.service.DishService;
 import com.yubikiri.reggie.service.SetmealService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
