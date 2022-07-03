@@ -32,7 +32,7 @@ public class MailController {
         String code = redisTemplate.opsForValue().get(email);
         //从redis获取验证码，如果获取获取到，返回ok
         if (!StringUtils.isEmpty(code)) {
-            return R.success("验证码仍有效");
+            throw new CustomException("请求发送过于频繁");
         }
         //如果从redis获取不到，生成新的6位验证码
         code = RandomUtil.getSixBitRandom();
