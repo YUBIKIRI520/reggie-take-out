@@ -7,7 +7,6 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@Slf4j
 @ServletComponentScan
 @EnableTransactionManagement
 public class ReggieApplication {
