@@ -2,7 +2,7 @@ package com.yubikiri.reggie.controller;
 
 import com.yubikiri.reggie.common.CustomException;
 import com.yubikiri.reggie.common.R;
-import com.yubikiri.reggie.common.RandomUtil;
+import com.yubikiri.reggie.utils.RandomUtil;
 import com.yubikiri.reggie.service.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
