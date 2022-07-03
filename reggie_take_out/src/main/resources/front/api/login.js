@@ -6,11 +6,10 @@ function loginApi(data) {
     })
 }
 
-function sendMsgApi(data) {
+function sendMsgApi(emailAddress) {
     return $axios({
-        'url': '/user/sendMsg',
-        'method': 'post',
-        data
+        'url': '/email/send/' + emailAddress,
+        'method': 'get',
     })
 }
 
