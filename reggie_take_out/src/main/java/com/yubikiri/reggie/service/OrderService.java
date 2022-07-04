@@ -10,4 +10,7 @@ public interface OrderService extends IService<Orders> {
     public void submit(Orders orders);
 
     public R<Page> userPage(Page pageInfo);
+
+    R<Page> pageQuery(Page pageInfo, String number, String beginTime, String endTime);
+
 }

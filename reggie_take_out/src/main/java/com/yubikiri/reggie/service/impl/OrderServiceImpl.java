@@ -13,6 +13,7 @@ import com.yubikiri.reggie.mapper.OrderDetailMapper;
 import com.yubikiri.reggie.mapper.OrderMapper;
 import com.yubikiri.reggie.mapper.UserMapper;
 import com.yubikiri.reggie.service.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,6 +116,38 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     }
 
     @Override
+    public R<Page> pageQuery(Page pageInfo, String number, String beginTime, String endTime) {
+
+        Page<OrdersDto> ordersDtoPage = new Page<>();
+
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.isNotEmpty(number), Orders::getNumber, number);
+        queryWrapper.between(StringUtils.isNotEmpty(beginTime) || StringUtils.isNotEmpty(endTime), Orders::getOrderTime, beginTime, endTime);
+        queryWrapper.orderByDesc(Orders::getOrderTime);
+        orderMapper.selectPage(pageInfo,queryWrapper);
+
+        BeanUtils.copyProperties(pageInfo,ordersDtoPage,"records");
+
+        List<Orders> records = pageInfo.getRecords();
+        List<OrdersDto> ordersDtoList = new ArrayList<>();
+
+        for (Orders record : records) {
+            OrdersDto ordersDto = new OrdersDto();
+            BeanUtils.copyProperties(record, ordersDto);
+            Long userId = record.getUserId();
+
+            User user = userMapper.selectById(userId);
+            if (user != null){
+                String name = user.getName();
+                ordersDto.setUserName(name);
+            }
+            ordersDtoList.add(ordersDto);
+        }
+        ordersDtoPage.setRecords(ordersDtoList);
+        return R.success(ordersDtoPage);
+    }
+
+    @Override
     public R<Page> userPage(Page pageInfo) {
 
         try {
@@ -149,6 +182,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
             e.printStackTrace();
             return R.error("订单数据加载失败");
         }
+
 
     }
 }
