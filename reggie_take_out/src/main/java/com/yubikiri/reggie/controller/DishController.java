@@ -6,6 +6,7 @@ import com.yubikiri.reggie.common.R;
 import com.yubikiri.reggie.dto.DishDto;
 import com.yubikiri.reggie.entity.Category;
 import com.yubikiri.reggie.entity.Dish;
+import com.yubikiri.reggie.entity.DishFlavor;
 import com.yubikiri.reggie.service.CategoryService;
 import com.yubikiri.reggie.service.DishFlavorService;
 import com.yubikiri.reggie.service.DishService;
@@ -95,15 +96,41 @@ public class DishController {
         return R.success("菜品信息更新成功");
     }
 
+//    @GetMapping("/list")
+//    public R<List<Dish>> list(Dish dish) {
+//
+//        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+//        queryWrapper.eq(Dish::getStatus, 1);
+//        queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+//
+//        List<Dish> list = dishService.list(queryWrapper);
+//
+//        return R.success(list);
+//    }
+
     @GetMapping("/list")
-    public R<List<Dish>> list(Dish dish) {
+    public R<List<DishDto>> list(Dish dish) {
 
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
         queryWrapper.eq(Dish::getStatus, 1);
         queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
 
-        List<Dish> list = dishService.list(queryWrapper);
+        List<Dish> dishes = dishService.list(queryWrapper);
+
+        List<DishDto> list = dishes.stream().map((item) -> {
+            DishDto dishDto = new DishDto();
+            BeanUtils.copyProperties(item, dishDto);
+
+            LambdaQueryWrapper<DishFlavor> flavorLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            flavorLambdaQueryWrapper.eq(DishFlavor::getDishId, item.getId());
+            List<DishFlavor> dishFlavors = dishFlavorService.list(flavorLambdaQueryWrapper);
+
+            dishDto.setFlavors(dishFlavors);
+
+            return dishDto;
+        }).collect(Collectors.toList());
 
         return R.success(list);
     }
