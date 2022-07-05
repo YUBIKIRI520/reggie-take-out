@@ -6,6 +6,8 @@ import com.yubikiri.reggie.common.R;
 import com.yubikiri.reggie.entity.Category;
 import com.yubikiri.reggie.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @CacheEvict(value = "category", allEntries = true)
     public R<String> save(@RequestBody Category category) {
         categoryService.save(category);
         return R.success("新增分类成功");
@@ -43,6 +46,7 @@ public class CategoryController {
     }
 
     @DeleteMapping
+    @CacheEvict(value = "category", allEntries = true)
     public R<String> delete(Long ids) {
 
         categoryService.remove(ids);
@@ -50,6 +54,7 @@ public class CategoryController {
     }
 
     @PutMapping
+    @CacheEvict(value = "category", allEntries = true)
     public R<String> update(@RequestBody Category category) {
 
         categoryService.updateById(category);
@@ -57,6 +62,7 @@ public class CategoryController {
     }
 
     @GetMapping("/list")
+    @Cacheable(value = "category")
     public R<List<Category>> list(Category category) {
 
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
