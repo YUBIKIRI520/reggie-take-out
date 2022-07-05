@@ -11,6 +11,8 @@ import com.yubikiri.reggie.service.CategoryService;
 import com.yubikiri.reggie.service.SetmealDishService;
 import com.yubikiri.reggie.service.SetmealService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +36,7 @@ public class SetmealController {
     }
 
     @PostMapping
+    @CacheEvict(value = "setmeal", key = "#setmealDto.categoryId + '_1'")
     public R<String> save(@RequestBody SetmealDto setmealDto) {
 
         setmealService.saveWithDish(setmealDto);
@@ -80,6 +83,7 @@ public class SetmealController {
     }
 
     @DeleteMapping
+    @CacheEvict(value = "setmeal", allEntries = true)
     public R<String> delete(@RequestParam List<Long> ids) {
 
         setmealService.removeWithDish(ids);
@@ -87,6 +91,7 @@ public class SetmealController {
     }
 
     @PostMapping("/status/{status}")
+    @CacheEvict(value = "setmeal", allEntries = true)
     public R<String> changeStatus(@PathVariable int status, String ids) {
 
         String[] idList = ids.split(",");
@@ -125,6 +130,7 @@ public class SetmealController {
     }
 
     @PutMapping
+    @CacheEvict(value = "setmeal", key = "#setmealDto.categoryId + '_1'")
     public R<String> updateSetmeal(@RequestBody SetmealDto setmealDto) {
 
         setmealService.updateWithDish(setmealDto);
@@ -132,6 +138,7 @@ public class SetmealController {
     }
 
     @GetMapping("/list")
+    @Cacheable(value = "setmeal", key = "#setmeal.categoryId + '_' + #setmeal.status")
     public R<List<Setmeal>> list(Setmeal setmeal) {
 
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
